@@ -1,0 +1,42 @@
+package widgetstore.web;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+public class LoginServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.setContentType("text/html");
+		PrintWriter out = resp.getWriter();
+		out.println("<form action='' method='POST'>");
+		out.println("<label>Welcome to Login Page!</label><br></br><br></br>");
+		out.println("<label>Enter userid: <input type='text' name='userid'></input></label><br></br>");
+		out.println("<label>Enter password: <input type='password' name='password'></input></label><br></br>");
+		out.println("<input type='submit'><br></br>Sign In</input><br></br>");
+		out.println("</form>");
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String userId = req.getParameter("userid");
+		String password = req.getParameter("password");
+		if (userId != null && password.equals("letmein")) {
+
+			/** This is what makes it a "valid" login */
+			req.getSession().setAttribute("userid", userId);
+
+			resp.sendRedirect("DrinkDetailsServlet");
+		} else {
+			this.doGet(req, resp);
+			PrintWriter out = resp.getWriter();
+			out.println("<form action='' method='POST'>");
+			out.println("<br></br><label>Enter correct password!</label></form>");
+		}
+	}
+}
