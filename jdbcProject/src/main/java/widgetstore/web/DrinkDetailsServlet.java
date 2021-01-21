@@ -54,15 +54,26 @@ public class DrinkDetailsServlet extends HttpServlet {
 		String drinkId = request.getParameter("drink-id");
 		PrintWriter out = response.getWriter();
 		DrinkDAO d = new DrinkDAOImpl();
-		DrinkDTO check = (d.productInfo((Integer.parseInt(drinkId))));
-		if (check != null) {
-			out.println("The Details of the Product are:");
-			out.println("Product ID:" + d.productInfo((Integer.parseInt(drinkId))).getId());
-			out.println("Product Name:" + d.productInfo((Integer.parseInt(drinkId))).getName());
-			out.println("Product Cost in Dollars:" + d.productInfo((Integer.parseInt(drinkId))).getCost());
-		} else {
-			out.println("Product with the given Id is not found!");
+		try {
+			DrinkDTO check = (d.productInfo((Integer.parseInt(drinkId))));
+			if (check != null) {
+				out.println("The Details of the Product are:");
+				out.println("Product ID:" + d.productInfo((Integer.parseInt(drinkId))).getId());
+				out.println("Product Name:" + d.productInfo((Integer.parseInt(drinkId))).getName());
+				out.println("Product Cost in Dollars:" + d.productInfo((Integer.parseInt(drinkId))).getCost());
+				method(d, response);
+			} else {
+				out.println("Product with the given Id is not found!");
+				this.doGet(request, response);
+			}
+		} catch (NumberFormatException e) {
+			out.println("Incorrect id is given!");
+			this.doGet(request, response);
 		}
+	}
+
+	public void method(DrinkDAO d, HttpServletResponse response) throws IOException {
+		PrintWriter out = response.getWriter();
 		out.println();
 		out.println();
 		out.println();
@@ -75,5 +86,4 @@ public class DrinkDetailsServlet extends HttpServlet {
 			out.println("Product Cost in Dollars:" + drinks.get(i).getCost());
 		}
 	}
-
 }
